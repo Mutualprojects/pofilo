@@ -1,0 +1,75 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { 
+  Award, BookOpen, Briefcase, Calendar, MapPin, 
+  Sparkles, Star, Milestone, ArrowRight, ArrowDown
+} from "lucide-react";
+import { Navbar } from "@/components/Navbar";
+import { MobileMenu } from "@/components/MobileMenu";
+import { CoreSpinLoader } from "@/components/CoreSpinLoader";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { HoverFooter } from "@/components/HoverFooter";
+
+  const LinePath = ({
+    className,
+    scrollYProgress,
+  }: {
+    className: string;
+    scrollYProgress: any;
+  }) => {
+    // Create a gradient for the stroke
+    const gradientId = "strokeGradient";
+    return (
+      <svg
+        viewBox="0 0 1278 2319"
+        fill="none"
+        overflow="visible"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={className}
+      >
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="var(--tw-gradient-from)" />
+            <stop offset="100%" stopColor="var(--tw-gradient-to)" />
+          </linearGradient>
+        </defs>
+        <motion.path
+          d="M876.605 394.131C788.982 335.917 696.198 358.139 691.836 416.303C685.453 501.424 853.722 498.43 941.95 409.714C1016.1 335.156 1008.64 186.907 906.167 142.846C807.014 100.212 712.699 198.494 
+
+        {/* --- ACCENT JOURNEY CTA --- */}
+        <section className="relative z-20 py-20 border-t border-zinc-200/50 dark:border-zinc-900/60 bg-zinc-50/20 dark:bg-zinc-900/5">
+          <div className="max-w-4xl mx-auto px-6 text-center flex flex-col items-center">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-3">
+              Ready for the next chapter
+            </span>
+            <h2 
+              className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-[#1F3A4B] dark:text-white leading-none mb-6"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
+              Let's Build Your Story <br />
+              <span className="text-[#3a9476]">Together</span>
+            </h2>
+            <p className="text-zinc-650 dark:text-zinc-450 font-medium leading-relaxed max-w-xl mb-10 text-sm">
+              Whether you need scalable enterprise AI platforms, live command centers, or highly responsive web applications—let's write the next technical milestone together.
+            </p>
+            <motion.a
+              href="/contact"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-8 py-4.5 rounded-full bg-zinc-900 text-[#f5f1e8] dark:bg-white dark:text-zinc-900 font-black text-xs uppercase tracking-[0.25em] shadow-lg hover:shadow-2xl transition-all duration-300 group"
+            >
+              Start a project
+              <ArrowRight className="w-4 h-4 text-orange-600 transition-transform group-hover:translate-x-1" />
+            </motion.a>
+          </div>
+        </section>
+
+        {/* --- FOOTER --- */}
+        <HoverFooter />
+      </div>
+    </>
+  );
+}
