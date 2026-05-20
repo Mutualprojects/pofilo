@@ -910,6 +910,10 @@ export default function JourneyPage() {
               width: 100%;
             }
 
+            .timeline ul li .timeline-card .discovery {
+              margin-right: 0;
+            }
+
             .timeline ul li:nth-of-type(even) > .timeline-card {
               left: -349px;
             }
@@ -917,48 +921,65 @@ export default function JourneyPage() {
 
           /* --- Responsive: Mobile --- */
           @media screen and (max-width: 680px) {
+            .timeline-container {
+              overflow-x: hidden;
+            }
+
             .timeline {
-              padding-bottom: 30px;
+              padding-bottom: 20px;
+              overflow: visible;
+            }
+
+            .timeline ul {
+              overflow: visible;
             }
 
             .timeline ul li {
-              margin-left: 20px;
-              padding-top: 40px;
+              margin-left: 8px;
+              padding-top: 45px;
+              width: 4px;
             }
 
             /* Smaller diamond nodes on mobile */
             .timeline ul li::after {
-              width: 14px;
-              height: 14px;
-              border-width: 3px;
+              width: 12px;
+              height: 12px;
+              border-width: 2px;
             }
 
             .timeline ul li .timeline-card {
-              width: calc(100vw - 90px);
-              max-width: 400px;
-              padding: 20px 16px 16px 16px;
+              width: calc(100vw - 75px);
+              max-width: 340px;
+              padding: 20px 14px 14px 14px;
+              border-radius: 14px;
+              flex-direction: column;
+              align-items: flex-start;
+              word-break: break-word;
+              overflow-wrap: break-word;
             }
 
             /* All cards go to the right on mobile */
             .timeline ul li:nth-of-type(odd) > .timeline-card,
             .timeline ul li:nth-of-type(even) > .timeline-card {
-              left: 35px;
+              left: 25px;
             }
             
             /* Consistent entry animation for mobile */
-            .timeline ul li:nth-of-type(odd) > .timeline-card,
+            .timeline ul li:nth-of-type(odd) > .timeline-card {
+              transform: translate3d(40px, -5px, 0) rotate(3deg);
+            }
             .timeline ul li:nth-of-type(even) > .timeline-card {
-              transform: translate3d(60px, -5px, 0) rotate(5deg);
+              transform: translate3d(40px, -5px, 0) rotate(3deg);
             }
 
             /* Badge sizing on mobile */
             .timeline ul li .timeline-card time {
-              min-width: 110px;
-              height: 26px;
-              font-size: 8px;
+              min-width: 100px;
+              height: 24px;
+              font-size: 7px;
               letter-spacing: 1px;
               padding: 0 10px;
-              top: -13px;
+              top: -12px;
             }
 
             /* Column headers */
@@ -969,43 +990,86 @@ export default function JourneyPage() {
               margin-bottom: 6px;
             }
 
-            /* Discovery column */
+            /* Discovery column - no right margin, full width */
             .timeline ul li .timeline-card .discovery {
               margin-right: 0;
+              width: 100%;
+              flex: none;
+            }
+
+            /* Scientist column - stack below */
+            .timeline ul li .timeline-card .scientist {
+              border-left: none;
+              padding-left: 0;
+              margin-top: 14px;
+              padding-top: 12px;
+              border-top: 1px solid var(--timeline-divider);
+              width: 100%;
+              flex: none;
+            }
+
+            /* Smaller description text */
+            .timeline ul li .timeline-card .discovery p {
+              font-size: 11px !important;
+              line-height: 1.5 !important;
+            }
+
+            /* Smaller title text */
+            .timeline ul li .timeline-card .discovery p:first-of-type {
+              font-size: 13px !important;
+            }
+
+            /* Tags wrap nicely */
+            .timeline ul li .timeline-card .discovery .flex-wrap {
+              gap: 4px;
+            }
+
+            /* Hover effect toned down on mobile */
+            .timeline ul li .timeline-card:hover {
+              transform: translateY(-4px) scale(1.01);
             }
           }
 
-          /* --- Responsive: Very small phones --- */
+          /* --- Responsive: Very small phones (< 400px) --- */
           @media screen and (max-width: 400px) {
             .timeline ul li {
-              margin-left: 12px;
-              padding-top: 35px;
+              margin-left: 4px;
+              padding-top: 40px;
+              width: 3px;
             }
 
             .timeline ul li::after {
-              width: 12px;
-              height: 12px;
+              width: 10px;
+              height: 10px;
               border-width: 2px;
             }
 
             .timeline ul li .timeline-card {
-              width: calc(100vw - 65px);
-              max-width: 340px;
-              padding: 18px 14px 14px 14px;
+              width: calc(100vw - 55px);
+              max-width: 300px;
+              padding: 16px 12px 12px 12px;
               border-radius: 12px;
             }
 
             .timeline ul li:nth-of-type(odd) > .timeline-card,
             .timeline ul li:nth-of-type(even) > .timeline-card {
-              left: 28px;
+              left: 20px;
             }
 
             .timeline ul li .timeline-card time {
-              min-width: 90px;
-              height: 24px;
-              font-size: 7px;
+              min-width: 85px;
+              height: 22px;
+              font-size: 6px;
               padding: 0 8px;
-              top: -12px;
+              top: -11px;
+            }
+
+            .timeline ul li .timeline-card .discovery p {
+              font-size: 10px !important;
+            }
+
+            .timeline ul li .timeline-card .discovery p:first-of-type {
+              font-size: 12px !important;
             }
           }
         ` }} />
