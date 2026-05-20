@@ -264,7 +264,7 @@ const StatItem = ({
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group relative flex flex-col items-center gap-2 px-8 py-6 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-md overflow-hidden cursor-default select-none"
+      className="group relative flex flex-col items-center gap-1.5 sm:gap-2 px-4 sm:px-8 py-4 sm:py-6 rounded-2xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 backdrop-blur-md overflow-hidden cursor-default select-none"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-rose-500/5 dark:from-[#C2F84F]/5 dark:to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <motion.div
@@ -273,7 +273,7 @@ const StatItem = ({
       >
         <Icon className="w-5 h-5 text-orange-600 dark:text-[#C2F84F]" />
       </motion.div>
-      <span className="text-3xl font-black text-zinc-900 dark:text-[#f5f1e8] tracking-tighter">
+      <span className="text-xl sm:text-3xl font-black text-zinc-900 dark:text-[#f5f1e8] tracking-tighter">
         {animatedValue}
       </span>
       <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 dark:text-zinc-500 text-center">
@@ -474,7 +474,7 @@ export default function JourneyPage() {
           <ThemeToggle variant="icon" />
         </div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 sm:px-12 lg:px-24 pt-36 pb-32">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-12 lg:px-24 pt-28 sm:pt-36 pb-20 sm:pb-32">
           {/* ─── HERO HEADER ─── */}
           <section className="text-center max-w-3xl mx-auto mb-20 md:mb-32">
             {/* Status pill */}
@@ -502,7 +502,7 @@ export default function JourneyPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tight leading-[0.9] mb-6"
+              className="text-4xl sm:text-6xl md:text-8xl font-black uppercase tracking-tight leading-[0.9] mb-6"
             >
               A Path Of
               <br />
@@ -578,7 +578,7 @@ export default function JourneyPage() {
           <ChapterDivider label="Timeline — Career Arc" />
 
           {/* ─── TIMELINE ─── */}
-          <div className="timeline-container mx-auto max-w-4xl relative min-h-[100vh]">
+          <div className="timeline-container mx-auto max-w-4xl relative min-h-[50vh] sm:min-h-[100vh]">
             <section className="timeline">
               <ul>
                 {MILESTONES.map((milestone, idx) => (
@@ -595,7 +595,7 @@ export default function JourneyPage() {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.15 }}
                 whileTap={{ scale: 0.9 }}
-                className="relative w-14 h-14 rounded-full border-4 border-[#f5f1e8] dark:border-[#0c0c0c] bg-zinc-950 dark:bg-white flex items-center justify-center shadow-xl cursor-pointer group overflow-hidden"
+                className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-4 border-[#f5f1e8] dark:border-[#0c0c0c] bg-zinc-950 dark:bg-white flex items-center justify-center shadow-xl cursor-pointer group overflow-hidden"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               >
                 <div className="absolute inset-0 bg-gradient-to-tr from-orange-500 to-rose-500 dark:from-[#C2F84F] dark:to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -614,7 +614,7 @@ export default function JourneyPage() {
         </div>
 
         {/* ─── CTA SECTION ─── */}
-        <section className="relative z-20 py-28 border-t border-zinc-950/5 dark:border-zinc-900/60 overflow-hidden">
+        <section className="relative z-20 py-16 sm:py-28 border-t border-zinc-950/5 dark:border-zinc-900/60 overflow-hidden">
           {/* Background texture */}
           <div className="absolute inset-0 bg-[#ffffff]/30 dark:bg-zinc-900/20 backdrop-blur-sm" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:40px_40px]" />
@@ -631,7 +631,7 @@ export default function JourneyPage() {
             className="absolute -right-20 top-1/3 w-[250px] h-[250px] rounded-full bg-indigo-500/8 dark:bg-teal-500/5 blur-[80px]"
           />
 
-          <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -646,7 +646,7 @@ export default function JourneyPage() {
                 <Code2 className="w-9 h-9 text-orange-600 dark:text-[#C2F84F]" />
               </motion.div>
 
-              <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tight leading-[0.92] mb-6">
+              <h2 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight leading-[0.92] mb-6">
                 Let's Build The Next
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-rose-500 to-indigo-500 dark:from-[#C2F84F] dark:via-emerald-400 dark:to-teal-500">
@@ -666,7 +666,7 @@ export default function JourneyPage() {
                   href="/contact"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-zinc-900 text-[#f5f1e8] dark:bg-white dark:text-zinc-900 font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-2xl transition-all duration-300 group relative overflow-hidden"
+                  className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-zinc-900 text-[#f5f1e8] dark:bg-white dark:text-zinc-900 font-black text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-xl hover:shadow-2xl transition-all duration-300 group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-rose-500 dark:from-[#C2F84F] dark:to-emerald-500 opacity-0 group-hover:opacity-15 transition-opacity duration-300" />
                   <span className="relative z-10">Start a project</span>
@@ -677,7 +677,7 @@ export default function JourneyPage() {
                   href="/projects"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md font-black text-xs uppercase tracking-[0.2em] text-zinc-700 dark:text-zinc-300 hover:border-orange-500/50 dark:hover:border-[#C2F84F]/50 transition-all duration-300 group"
+                  className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md font-black text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-700 dark:text-zinc-300 hover:border-orange-500/50 dark:hover:border-[#C2F84F]/50 transition-all duration-300 group"
                 >
                   <Layers className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                   <span>View work</span>
@@ -892,7 +892,7 @@ export default function JourneyPage() {
             box-shadow: 0 0 25px var(--timeline-node-active-glow);
           }
 
-          /* --- Responsive Queries --- */
+          /* --- Responsive: Tablet --- */
           @media screen and (max-width: 960px) {
             .timeline ul li .timeline-card {
               width: 310px;
@@ -915,26 +915,97 @@ export default function JourneyPage() {
             }
           }
 
+          /* --- Responsive: Mobile --- */
           @media screen and (max-width: 680px) {
+            .timeline {
+              padding-bottom: 30px;
+            }
+
             .timeline ul li {
-              margin-left: 30px;
+              margin-left: 20px;
+              padding-top: 40px;
+            }
+
+            /* Smaller diamond nodes on mobile */
+            .timeline ul li::after {
+              width: 14px;
+              height: 14px;
+              border-width: 3px;
             }
 
             .timeline ul li .timeline-card {
-              width: calc(100vw - 110px);
-              max-width: 450px;
+              width: calc(100vw - 90px);
+              max-width: 400px;
+              padding: 20px 16px 16px 16px;
             }
 
+            /* All cards go to the right on mobile */
+            .timeline ul li:nth-of-type(odd) > .timeline-card,
             .timeline ul li:nth-of-type(even) > .timeline-card {
-              left: 45px;
+              left: 35px;
             }
             
-            .timeline ul li:nth-of-type(odd) > .timeline-card {
-              left: 45px;
-            }
-            
+            /* Consistent entry animation for mobile */
+            .timeline ul li:nth-of-type(odd) > .timeline-card,
             .timeline ul li:nth-of-type(even) > .timeline-card {
-              transform: translate3d(100px, -10px, 0) rotate(10deg);
+              transform: translate3d(60px, -5px, 0) rotate(5deg);
+            }
+
+            /* Badge sizing on mobile */
+            .timeline ul li .timeline-card time {
+              min-width: 110px;
+              height: 26px;
+              font-size: 8px;
+              letter-spacing: 1px;
+              padding: 0 10px;
+              top: -13px;
+            }
+
+            /* Column headers */
+            .timeline ul li .timeline-card .discovery h1,
+            .timeline ul li .timeline-card .scientist h1 {
+              font-size: 8px;
+              letter-spacing: 1.5px;
+              margin-bottom: 6px;
+            }
+
+            /* Discovery column */
+            .timeline ul li .timeline-card .discovery {
+              margin-right: 0;
+            }
+          }
+
+          /* --- Responsive: Very small phones --- */
+          @media screen and (max-width: 400px) {
+            .timeline ul li {
+              margin-left: 12px;
+              padding-top: 35px;
+            }
+
+            .timeline ul li::after {
+              width: 12px;
+              height: 12px;
+              border-width: 2px;
+            }
+
+            .timeline ul li .timeline-card {
+              width: calc(100vw - 65px);
+              max-width: 340px;
+              padding: 18px 14px 14px 14px;
+              border-radius: 12px;
+            }
+
+            .timeline ul li:nth-of-type(odd) > .timeline-card,
+            .timeline ul li:nth-of-type(even) > .timeline-card {
+              left: 28px;
+            }
+
+            .timeline ul li .timeline-card time {
+              min-width: 90px;
+              height: 24px;
+              font-size: 7px;
+              padding: 0 8px;
+              top: -12px;
             }
           }
         ` }} />
