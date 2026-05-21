@@ -19,6 +19,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sirigineedi Balaji | Full Stack Developer & AI Enthusiast",
   description: "Portfolio of Sirigineedi Balaji, a Full Stack Developer specialized in Backend, API Development, and AI-Integrated Applications.",
+  icons: {
+    icon: "/Letter B Logo (1) Cropped.png",
+    apple: "/Letter B Logo (1) Cropped.png",
+  },
 };
 
 export default function RootLayout({

@@ -8,9 +8,11 @@ import { BlogHeaderWrapper } from "@/components/BlogHeaderWrapper";
 import { HoverFooter } from "@/components/HoverFooter";
 import { ArticleRailWrapper } from "@/components/ArticleRailWrapper";
 
+export const revalidate = 0;
+
 async function getPost(slug: string) {
   const query = `
-    *[_type == "post" && slug.current == $slug][0] {
+    *[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
       _id,
       title,
       publishedAt,
@@ -21,7 +23,7 @@ async function getPost(slug: string) {
       "authorImage": author->image
     }
   `;
-  return await client.fetch(query, { slug });
+  return await client.fetch(query, { slug }, { next: { revalidate: 0 } });
 }
 
 // Custom Portable Text components with automatic ID mapping for the scroll anchor links
