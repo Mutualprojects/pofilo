@@ -3,6 +3,17 @@ import { BlogHeaderWrapper } from "@/components/BlogHeaderWrapper";
 import { HoverFooter } from "@/components/HoverFooter";
 import { BlogArchiveClient } from "@/components/BlogArchiveClient";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Engineering Blog & Insights",
+  description: "Deep-dive technical archives on Full-Stack development, AI integration, and high-performance system architecture by Sirigineedi Balaji.",
+  openGraph: {
+    title: "Engineering Blog & Insights | Sirigineedi Balaji",
+    description: "Deep-dive technical archives on Full-Stack development, AI integration, and high-performance system architecture.",
+  }
+};
+
 export const revalidate = 0;
 
 async function getPosts() {
