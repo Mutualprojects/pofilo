@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "ADD_YOUR_GOOGLE_SEARCH_CONSOLE_META_TAG_HERE", // Optional: Add if you use Google Search Console
+    google: "oCKPmsc8TayOJwzRbikbi2cDCTYUf4VBNeUWKIKayi4",
   },
   openGraph: {
     type: "website",
