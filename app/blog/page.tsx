@@ -26,7 +26,8 @@ async function getPosts() {
       overview,
       mainImage,
       category,
-      tags
+      tags,
+      likes
     }
   `;
   return await client.fetch(query, {}, { next: { revalidate: 0 } });

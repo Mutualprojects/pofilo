@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform, MotionValue } from "framer-motion";
+import { ReactLenis } from 'lenis/react';
 import {
   Sparkles,
   Zap,
@@ -538,118 +539,112 @@ function StepVisual({ id }: { id: number }) {
   return <>{map[id] ?? null}</>;
 }
 
-// ─── STEP ROW ─────────────────────────────────────────────────────────────────
+// ─── CARD COMPONENT (STACKING) ────────────────────────────────────────────────
 
-const StepRow = ({ step, index }: { step: ProcessStep; index: number }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const StepIcon = step.icon;
+interface CardProps {
+  step: ProcessStep;
+  progress: MotionValue<number>;
+  range: [number, number];
+  targetScale: number;
+  i: number;
+}
+
+const Card = ({ step, progress, range, targetScale, i }: CardProps) => {
+  const container = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ['start end', 'start start'],
+  });
+
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.05, 1]);
+  const scale = useTransform(progress, range, [1, targetScale]);
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
-      className="relative flex gap-4 md:gap-6 items-stretch"
+    <div
+      ref={container}
+      className="h-[85vh] flex items-center justify-center sticky top-0 px-2 sm:px-4"
     >
-      {/* ── Timeline Bubble ── */}
-      <div className="relative flex flex-col items-center shrink-0 w-10 md:w-12">
-        <motion.div
-          initial={{ scale: 0.7, backgroundColor: "rgba(255,255,255,0.8)", borderColor: "rgb(228,228,231)", color: "rgb(161,161,170)" }}
-          animate={
-            isInView
-              ? { scale: 1.05, backgroundColor: "rgb(234,88,12)", borderColor: "rgb(234,88,12)", color: "#fff", boxShadow: "0 0 18px rgba(234,88,12,0.4)" }
-              : {}
-          }
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 dark:border-zinc-800/80 bg-white/40 dark:bg-zinc-950/40 backdrop-blur-sm flex items-center justify-center z-10 shadow"
-        >
-          <StepIcon className="w-4 h-4 md:w-5 md:h-5" />
-        </motion.div>
-      </div>
-
-      {/* ── Card (Sleek Glassmorphism, Removed White Opaque Background) ── */}
-      <div className="flex-1 min-w-0 bg-[#eae6dc]/25 dark:bg-zinc-950/20 backdrop-blur-[6px] hover:bg-[#eae6dc]/40 dark:hover:bg-zinc-950/40 rounded-2xl md:rounded-3xl border border-zinc-300/40 dark:border-zinc-800/50 shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-orange-500/30 dark:hover:border-orange-500/20 transition-all duration-300 overflow-hidden group">
+      <motion.div
+        style={{
+          scale,
+          top: `calc(10vh + ${i * 18}px)`,
+        }}
+        className="relative w-full max-w-5xl flex flex-col bg-[#eae6dc]/80 dark:bg-zinc-950/80 backdrop-blur-[12px] rounded-2xl md:rounded-3xl border border-zinc-300/60 dark:border-zinc-800/60 shadow-xl overflow-hidden origin-top group"
+      >
         {/* Accent top bar */}
-        <div className="h-[2px] bg-gradient-to-r from-orange-600 via-orange-400 to-transparent opacity-70" />
+        <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-orange-600 via-orange-400 to-transparent opacity-80" />
 
-        <div className="p-4 sm:p-6 md:p-8">
-          <div className="grid lg:grid-cols-12 gap-5 lg:gap-8 items-start">
+        <div className="p-5 sm:p-6 md:p-8 flex flex-col lg:flex-row gap-6 lg:gap-8 h-full">
+          {/* ── Left: Text Content ── */}
+          <div className="flex-1 space-y-4">
+            {/* Phase label + metric */}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.22em] text-orange-600 bg-orange-500/10 px-2.5 py-1 rounded-full border border-orange-500/20">
+                {step.phase}
+              </span>
+              {step.metrics && (
+                <div className="text-right hidden sm:block">
+                  <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 dark:text-zinc-500 leading-none mb-0.5">
+                    {step.metrics.label}
+                  </p>
+                  <p className="text-xs md:text-sm font-black text-zinc-700 dark:text-zinc-200 leading-none">
+                    {step.metrics.value}
+                  </p>
+                </div>
+              )}
+            </div>
 
-            {/* ── Left: Text Content ── */}
-            <div className="lg:col-span-7 space-y-4">
+            {/* Title */}
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none mt-2">
+              {step.title}
+            </h3>
 
-              {/* Phase label + metric */}
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.22em] text-orange-600 bg-orange-500/10 px-2.5 py-1 rounded-full border border-orange-500/20">
-                  {step.phase}
-                </span>
-                {step.metrics && (
-                  <div className="text-right">
-                    <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 dark:text-zinc-500 leading-none mb-0.5">
-                      {step.metrics.label}
-                    </p>
-                    <p className="text-xs md:text-sm font-black text-zinc-700 dark:text-zinc-200 leading-none">
-                      {step.metrics.value}
-                    </p>
-                  </div>
-                )}
-              </div>
+            {/* Description */}
+            <p className="text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 font-medium max-w-lg">
+              {step.description}
+            </p>
 
-              {/* Title */}
-              <h3 className="text-lg sm:text-xl md:text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none">
-                {step.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-xs sm:text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
-                {step.description}
+            {/* Execution Highlights */}
+            <div className="space-y-2 mt-4 hidden sm:block">
+              <p className="text-[9px] font-black uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">
+                Execution Highlights
               </p>
-
-              {/* Execution Highlights */}
-              <div className="space-y-2">
-                <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">
-                  Execution Highlights
-                </p>
-                <ul className="space-y-2">
-                  {step.detailedPoints.map((point, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-                      className="flex gap-2.5 text-xs font-semibold leading-relaxed text-zinc-700 dark:text-zinc-300"
-                    >
-                      <CheckCircle2 className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
-                      <span>{point}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Tech Tags */}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {step.techTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-0.5 rounded-xl border border-zinc-300/40 dark:border-zinc-800 bg-[#eae6dc]/20 dark:bg-zinc-900/20 text-[8px] md:text-[9px] font-black uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:border-orange-500/40 hover:text-orange-600 dark:hover:text-orange-500 transition-colors duration-200"
+              <ul className="space-y-2">
+                {step.detailedPoints.map((point, idx) => (
+                  <li
+                    key={idx}
+                    className="flex gap-2.5 text-xs font-semibold leading-relaxed text-zinc-700 dark:text-zinc-300"
                   >
-                    {tag}
-                  </span>
+                    <CheckCircle2 className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
+                    <span>{point}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            {/* ── Right: Animated Visual (Sleek Transparent Visual Canvas) ── */}
-            <div className="lg:col-span-5 h-36 sm:h-40 md:h-44 rounded-xl md:rounded-2xl border border-zinc-200/30 dark:border-zinc-800/30 bg-[#eae6dc]/10 dark:bg-black/30 backdrop-blur-[2px] overflow-hidden shadow-inner relative">
-              <StepVisual id={step.id} />
+            {/* Tech Tags */}
+            <div className="flex flex-wrap gap-1.5 pt-2 sm:pt-4">
+              {step.techTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2.5 py-1 rounded-xl border border-zinc-300/60 dark:border-zinc-800 bg-[#eae6dc]/40 dark:bg-zinc-900/40 text-[8px] md:text-[9px] font-black uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-orange-600 dark:hover:text-orange-500 transition-colors"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
+          </div>
 
+          {/* ── Right: Animated Visual ── */}
+          <div className="w-full lg:w-[40%] h-40 sm:h-48 lg:h-auto min-h-[160px] lg:min-h-[250px] rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 bg-[#eae6dc]/30 dark:bg-black/30 backdrop-blur-[2px] overflow-hidden shadow-inner relative flex items-center justify-center">
+            <motion.div style={{ scale: imageScale }} className="w-full h-full relative">
+               <StepVisual id={step.id} />
+            </motion.div>
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
@@ -718,70 +713,84 @@ const SectionHeader = () => {
 // ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
 
 export function MyProcess() {
+  const container = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ['start start', 'end end'],
+  });
+
   return (
-    <section className="relative w-full bg-[#f7f3ea] dark:bg-[#0b0b0b] py-20 sm:py-28 md:py-36 overflow-hidden border-t border-zinc-200/60 dark:border-zinc-900/60 transition-colors duration-500">
+    <ReactLenis root>
+      <section ref={container} className="relative w-full bg-[#f7f3ea] dark:bg-[#0b0b0b] py-20 sm:py-28 md:py-36 border-t border-zinc-200/60 dark:border-zinc-900/60 transition-colors duration-500">
 
-      {/* Dot-grid background */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none select-none opacity-30 dark:opacity-15"
-        style={{
-          backgroundImage: "radial-gradient(circle, #ea580c 0.7px, transparent 0.7px)",
-          backgroundSize: "22px 22px",
-        }}
-      />
-
-      {/* Subtle radial glow */}
-      <div
-        aria-hidden
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] pointer-events-none opacity-20 dark:opacity-10"
-        style={{ background: "radial-gradient(ellipse at center, rgba(234,88,12,0.35) 0%, transparent 70%)" }}
-      />
-
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <SectionHeader />
-
-        {/* Timeline */}
-        <div className="relative space-y-8 md:space-y-10">
-
-          {/* Single clean responsive vertical connector line */}
+        {/* Background container (avoids overflow-hidden on the scroll container so sticky works) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Dot-grid background */}
           <div
-            aria-hidden
-            className="absolute top-5 bottom-5 w-px bg-gradient-to-b from-transparent via-zinc-300/80 dark:via-zinc-800/80 to-transparent pointer-events-none left-[19px] md:left-[23px]"
+            className="absolute inset-0 select-none opacity-30 dark:opacity-15"
+            style={{
+              backgroundImage: "radial-gradient(circle, #ea580c 0.7px, transparent 0.7px)",
+              backgroundSize: "22px 22px",
+            }}
           />
 
-          {CAREER_PROCESS.map((step, i) => (
-            <StepRow key={step.id} step={step} index={i} />
-          ))}
+          {/* Subtle radial glow */}
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] opacity-20 dark:opacity-10"
+            style={{ background: "radial-gradient(ellipse at center, rgba(234,88,12,0.35) 0%, transparent 70%)" }}
+          />
         </div>
 
-        {/* Footer CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6 }}
-          className="mt-16 md:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-xs font-black uppercase tracking-widest transition-all duration-200 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:-translate-y-0.5"
-          >
-            <Rocket className="w-4 h-4" />
-            Let's Build Together
-          </a>
-          <a
-            href="#projects"
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl border border-zinc-300/50 dark:border-zinc-700/50 text-zinc-700 dark:text-zinc-300 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-400 text-xs font-black uppercase tracking-widest transition-all duration-200 bg-[#eae6dc]/40 dark:bg-zinc-900/40 backdrop-blur-sm hover:-translate-y-0.5"
-          >
-            View Projects
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </motion.div>
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      </div>
-    </section>
+          <SectionHeader />
+
+          {/* Timeline Stack */}
+          <div className="relative mt-8 md:mt-16 pb-[10vh]">
+            {CAREER_PROCESS.map((step, i) => {
+              const rangeStart = i * (1 / CAREER_PROCESS.length);
+              const targetScale = 1 - (CAREER_PROCESS.length - i) * 0.04;
+              return (
+                <Card
+                  key={step.id}
+                  step={step}
+                  i={i}
+                  progress={scrollYProgress}
+                  range={[rangeStart, 1]}
+                  targetScale={targetScale}
+                />
+              );
+            })}
+          </div>
+
+          {/* Footer CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6 }}
+            className="mt-16 md:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-20"
+          >
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-xs font-black uppercase tracking-widest transition-all duration-200 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:-translate-y-0.5"
+            >
+              <Rocket className="w-4 h-4" />
+              Let's Build Together
+            </a>
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl border border-zinc-300/50 dark:border-zinc-700/50 text-zinc-700 dark:text-zinc-300 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-400 text-xs font-black uppercase tracking-widest transition-all duration-200 bg-[#eae6dc]/40 dark:bg-zinc-900/40 backdrop-blur-sm hover:-translate-y-0.5"
+            >
+              View Projects
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </motion.div>
+
+        </div>
+      </section>
+    </ReactLenis>
   );
 }
 

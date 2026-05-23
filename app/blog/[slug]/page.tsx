@@ -7,6 +7,7 @@ import { ArrowLeft, Calendar, Clock, Sparkles } from "lucide-react";
 import { BlogHeaderWrapper } from "@/components/BlogHeaderWrapper";
 import { HoverFooter } from "@/components/HoverFooter";
 import { ArticleRailWrapper } from "@/components/ArticleRailWrapper";
+import { BlogInteractions } from "@/components/BlogInteractions";
 
 export const revalidate = 0;
 
@@ -20,7 +21,8 @@ async function getPost(slug: string) {
       body,
       "slug": slug.current,
       "authorName": author->name,
-      "authorImage": author->image
+      "authorImage": author->image,
+      likes
     }
   `;
   return await client.fetch(query, { slug }, { next: { revalidate: 0 } });
@@ -206,6 +208,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Sticky Heading Outline Rail & Scrolling Content Column */}
         <ArticleRailWrapper post={post}>
           <PortableText value={post.body} components={ptComponents} />
+          
+          {/* Like, Comment, Share Interactive Component */}
+          <BlogInteractions slug={post.slug} postId={post._id} initialLikes={post.likes} />
         </ArticleRailWrapper>
 
       </article>

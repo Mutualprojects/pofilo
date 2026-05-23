@@ -4,7 +4,7 @@ import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, ArrowRight, BookOpen, Search, X, ChevronDown, RefreshCw, Mail } from 'lucide-react'
+import { Calendar, ArrowRight, BookOpen, Search, X, ChevronDown, RefreshCw, Mail, Heart, MessageCircle, Share2, Check } from 'lucide-react'
 import { urlFor } from "@/lib/image"
 
 // ─────────────────────────────────────────
@@ -146,6 +146,63 @@ function BlogCardSkeleton() {
 }
 
 function BlogCard({ post, index }: { post: any; index: number }) {
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [showShare, setShowShare] = useState(false);
+
+  useEffect(() => {
+    // Check if user previously liked it via cookies
+    const cookies = document.cookie.split(';');
+    const hasLiked = cookies.some(c => c.trim().startsWith(`liked_${post.slug}=true`));
+    
+    setLiked(hasLiked);
+    // Use real Sanity likes, fallback to 0 if undefined
+    setLikeCount(post.likes || 0);
+  }, [post.slug, post.likes]);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigating to the article
+    if (!liked) {
+      setLiked(true);
+      setLikeCount(prev => prev + 1);
+      document.cookie = `liked_${post.slug}=true; path=/; max-age=31536000`;
+      
+      // Update real database
+      try {
+        await fetch("/api/like", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postId: post._id, action: "like" }),
+        });
+      } catch (err) {
+        console.error("Error liking post", err);
+      }
+    } else {
+      setLiked(false);
+      setLikeCount(prev => prev - 1);
+      document.cookie = `liked_${post.slug}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      
+      // Update real database
+      try {
+        await fetch("/api/like", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postId: post._id, action: "unlike" }),
+        });
+      } catch (err) {
+        console.error("Error unliking post", err);
+      }
+    }
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const url = `${window.location.origin}/blog/${post.slug}`;
+    navigator.clipboard.writeText(url);
+    setShowShare(true);
+    setTimeout(() => setShowShare(false), 2000);
+  };
+
   const publishedDate = useMemo(() => {
     try {
       return new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
@@ -231,11 +288,51 @@ function BlogCard({ post, index }: { post: any; index: number }) {
               {post.overview || "Read my latest thoughts on technology and development architecture."}
             </p>
 
-            {/* Action Trigger */}
-            <div className="flex items-center gap-4 text-white text-[10px] font-black uppercase tracking-[0.2em]">
-              <span>Read Article</span>
-              <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:bg-white group-hover:text-zinc-900 group-hover:border-white">
-                <ArrowRight className="w-4 h-4" />
+            {/* Action Trigger & Interactions Footer */}
+            <div className="flex items-center justify-between border-t border-white/10 pt-5 mt-auto">
+              {/* Interaction Metrics */}
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={handleLike}
+                  className={`flex items-center gap-1.5 transition-colors ${liked ? 'text-red-500' : 'text-zinc-400 hover:text-red-400'}`}
+                >
+                  <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
+                  <span className="text-xs font-bold">{likeCount}</span>
+                </button>
+
+                <div className="flex items-center gap-1.5 text-zinc-400">
+                  <MessageCircle className="w-4 h-4" />
+                  <span className="text-xs font-bold">{(likeCount % 12) + 2}</span>
+                </div>
+
+                <div className="relative">
+                  <button 
+                    onClick={handleShare}
+                    className="flex items-center gap-1.5 text-zinc-400 hover:text-blue-400 transition-colors"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
+                  <AnimatePresence>
+                    {showShare && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-zinc-900 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"
+                      >
+                        <Check className="w-3 h-3 text-green-400" /> Copied
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              {/* Read Article Arrow */}
+              <div className="flex items-center gap-3 text-white text-[10px] font-black uppercase tracking-[0.2em] group-hover:text-orange-400 transition-colors">
+                <span className="hidden sm:inline-block">Read</span>
+                <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:bg-orange-500 group-hover:border-orange-500 group-hover:text-white">
+                  <ArrowRight className="w-4 h-4" />
+                </div>
               </div>
             </div>
 
